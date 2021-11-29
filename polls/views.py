@@ -5,38 +5,27 @@ from .models import Question,Choice
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-# Create your views here.
 
-# def index(request):    #调用视图，需要将它映射到一个 URL
-#
-#     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-#     # context变量是一个映射了Python对象到模板变量的字典。
-#     # 一个context是一系列变量和它们值的集合。
-#     context = {
-#         'latest_question_list': latest_question_list,
-#     }
-#     return render(request, 'polls/index.html', context)
-#
-# def detail(request, question_id):
-#     question = get_object_or_404(Question, pk=question_id)
-#
-#     return render(request, 'polls/detail.html', {'question': question})
-#
-# def results(request, question_id):
-#     question = get_object_or_404(Question, pk=question_id)
-#     return render(request, 'polls/results.html', {'question': question})
+
+# Create your views here.
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
     def get_queryset(self):
         # __lte表达的就是小于等于的意思
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
+
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
+
+
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -54,3 +43,5 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+    
